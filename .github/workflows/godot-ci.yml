@@ -20,6 +20,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Install libx11
+        run: sudo apt-get install -y libx11-6
       - name: Move HTML5 templates into position
         run: |
           mkdir -v -p ~/.local/share/godot/templates
