@@ -30,7 +30,7 @@ jobs:
         run: |
           mkdir -v -p build/html
           cd testProject
-          godot -v --headless --export-release "HTML5" ../build/html/index.html project.godot
+          godot -v --headless --export-release "Web" ../build/html/index.html project.godot
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
