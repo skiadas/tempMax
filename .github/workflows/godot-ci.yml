@@ -26,11 +26,11 @@ jobs:
         run: |
           mkdir -v -p ~/.local/share/godot/templates
           mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
-      - name: Create staging directory
-        run: mkdir -v -p build/html
-
-      - name: Build
-        run: godot -v --headless --export-release "HTML5" build/html/index.html testProject/project.godot
+      - name: Create staging directory and build
+        run: |
+          mkdir -v -p build/html
+          cd testProject
+          godot -v --headless --export-release "HTML5" ../build/html/index.html testProject/project.godot
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
