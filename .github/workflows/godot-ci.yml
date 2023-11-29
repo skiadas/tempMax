@@ -37,15 +37,15 @@ jobs:
         with:
           name: html
           path: testProject/build/html
-      - name: Upload S3
-        uses: shallwefootball/s3-upload-action@master
-        id: S3
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws_key_id: ${{ secrets.AWS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
-          aws_bucket: ${{ secrets.AWS_BUCKET }}
-          source_dir: 'testProject/build/html'
-
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: us-east-1
+      - name: Upload S3
+        run: |
+          aws s3 sync testProject/build/html s3://max-bow-project
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
