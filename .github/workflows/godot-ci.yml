@@ -65,7 +65,7 @@ jobs:
         run: |
           pwd
           ls
-          aws s3 sync testProject/build/html s3://max-bow-project
+          aws s3 sync . s3://max-bow-project
 
 permissions:
   contents: write
