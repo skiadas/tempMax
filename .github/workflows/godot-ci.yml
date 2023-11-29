@@ -19,9 +19,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: install aws
-        id: install-aws-cli
-        uses: unfor19/install-aws-cli-action@master
       # - name: Install libx11
       #   run: apt-get install -y libx11-6:i386
       - name: Move HTML5 templates into position
@@ -33,21 +30,11 @@ jobs:
           cd testProject
           mkdir -v -p build/html
           godot -v --headless --export-release "Web" build/html/index.html project.godot
-
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
           name: html
           path: testProject/build/html
-      - name: Configure AWS credentials from Test account
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
-          aws-region: us-east-1
-      - name: Upload S3
-        run: |
-          aws s3 sync testProject/build/html s3://max-bow-project
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -57,6 +44,26 @@ jobs:
           user_name: 'github-ci[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           commit_message: 'Publish to gh-pages'
+  s3Upload:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: install aws
+        id: install-aws-cli
+        uses: unfor19/install-aws-cli-action@master
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: us-east-1
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: html
+      - name: Upload S3
+        run: |
+          aws s3 sync html s3://max-bow-project
 
 permissions:
   contents: write
