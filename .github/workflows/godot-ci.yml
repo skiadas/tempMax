@@ -63,7 +63,9 @@ jobs:
           name: html
       - name: Upload S3
         run: |
-          aws s3 sync html s3://max-bow-project
+          pwd
+          ls
+          aws s3 sync testProject/build/html s3://max-bow-project
 
 permissions:
   contents: write
