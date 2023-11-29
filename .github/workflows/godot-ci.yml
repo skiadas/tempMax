@@ -28,15 +28,15 @@ jobs:
           mv /root/.local/share/godot/templates/${GODOT_VERSION}.stable ~/.local/share/godot/templates/${GODOT_VERSION}.stable
       - name: Create staging directory and build
         run: |
-          mkdir -v -p build/html
           cd testProject
-          godot -v --headless --export-release "Web" ../build/html/index.html project.godot
+          mkdir -v -p build/html
+          godot -v --headless --export-release "Web" build/html/index.html project.godot
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v1
         with:
           name: html
-          path: build/html
+          path: testProject/build/html
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
